@@ -14,11 +14,48 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+import os
 import webapp2
 import jinja2
 
-template_dir = os.path.join(os.path.dirname(_file_), "templates")
-jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir))
+from google.appengine.ext import db
+
+template_dir = os.path.join(os.path.dirname(__file__), "templates")
+jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir), autoescape = True)
+
+page_header = """
+<!DOCTYPE html>
+    <head>
+        <title>Build-a-Blog</title>
+    </head>
+    <body>
+        <h1></h1>
+"""
+
+post_form = """
+<form method = "post">
+    <label>New Post</label>
+    <br>
+    <br>
+    <label>
+        <div>Subject</div>
+    </label>
+    <input type = "text" name = "subject">
+    <br>
+    <br>
+    <label>
+        <div>Blog</div>
+    <textarea name = "blog"></textarea>
+    </label>
+    <br>
+    <br>
+    <input type = "submit">
+</form>
+"""
+page_footer = """
+</body>
+</html>
+"""
 
 class Handler(webapp2.RequestHandler):
     def write(self, *a, **kw):
@@ -31,9 +68,20 @@ class Handler(webapp2.RequestHandler):
     def render(self, template, **kw):
         self.write(self.render_str(template, **kw))
 
-class MainHandler(webapp2.RequestHandler):
+class MainHandler(Handler):
     def get(self):
-        self.response.write('Hello world!')
+        content = (page_header + post_form +page_footer)
+        self.response.write(content)
+
+    def post(self):
+        subject = self.request.get("subject")
+        blog = self.request.get("blog")
+
+        if subject and blog:
+            self.response.out.write(post_form + "Thanks!")
+        else:
+            error_message = "Both Subject and Blog are required."
+            self.response.out.write(post_form + error_message)
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler)
