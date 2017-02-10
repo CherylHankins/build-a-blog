@@ -70,18 +70,32 @@ class Handler(webapp2.RequestHandler):
 
 class MainHandler(Handler):
     def get(self):
-        content = (page_header + post_form +page_footer)
-        self.response.write(content)
+        #self.render("newpost.html")
+        content = (page_header + post_form + page_footer)
+        self.write(content)
 
     def post(self):
         subject = self.request.get("subject")
         blog = self.request.get("blog")
 
         if subject and blog:
-            self.response.out.write(post_form + "Thanks!")
+            c = Blog(subject = subject, blog = blog)
+            c.put()
+
+            self.redirect("/")
         else:
             error_message = "Both Subject and Blog are required."
             self.response.out.write(post_form + error_message)
+
+    #to retain valid user input
+    #def render_front(self, subject = "", blog = "", error = "")
+        #content = (page_header + post_form + page_footer)
+        #self.write(content, subject = subject, blog = blog, error = error)
+
+class Blog(db.Model):
+    subject = db.StringProperty(required = True)
+    blog = db.TextProperty(required = True)
+    created = db.DateTimeProperty(auto_now_add = True)
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler)
