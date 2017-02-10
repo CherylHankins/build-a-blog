@@ -23,39 +23,6 @@ from google.appengine.ext import db
 template_dir = os.path.join(os.path.dirname(__file__), "templates")
 jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir), autoescape = True)
 
-page_header = """
-<!DOCTYPE html>
-    <head>
-        <title>Build-a-Blog</title>
-    </head>
-    <body>
-        <h1></h1>
-"""
-
-post_form = """
-<form method = "post">
-    <label>New Post</label>
-    <br>
-    <br>
-    <label>
-        <div>Subject</div>
-    </label>
-    <input type = "text" name = "subject">
-    <br>
-    <br>
-    <label>
-        <div>Blog</div>
-    <textarea name = "blog"></textarea>
-    </label>
-    <br>
-    <br>
-    <input type = "submit">
-</form>
-"""
-page_footer = """
-</body>
-</html>
-"""
 
 class Handler(webapp2.RequestHandler):
     def write(self, *a, **kw):
@@ -69,31 +36,34 @@ class Handler(webapp2.RequestHandler):
         self.write(self.render_str(template, **kw))
 
 class MainHandler(Handler):
+    #to retain valid user input 1 of 3
+    #def render_newpost(self, title = "", blog = "", error = "")
+        #self.render("newpost.html", title = title, blog = blog, error = error)
+
     def get(self):
-        #self.render("newpost.html")
-        content = (page_header + post_form + page_footer)
-        self.write(content)
+        self.render("newpost.html")
+        #to retain valid user input 2 of 3
+        #self.render_newpost()
 
     def post(self):
-        subject = self.request.get("subject")
+        subject = self.request.get("title")
         blog = self.request.get("blog")
 
         if subject and blog:
-            c = Blog(subject = subject, blog = blog)
+            c = Blog(title = title, blog = blog)
             c.put()
 
             self.redirect("/")
-        else:
-            error_message = "Both Subject and Blog are required."
-            self.response.out.write(post_form + error_message)
 
-    #to retain valid user input
-    #def render_front(self, subject = "", blog = "", error = "")
-        #content = (page_header + post_form + page_footer)
-        #self.write(content, subject = subject, blog = blog, error = error)
+        else:
+            error = "Both Title and Blog are required."
+            self.render("newpost.html", error = error)
+            #to retain valid user input 3 of 3
+            #self.render_newpost(title, blog, error)
+
 
 class Blog(db.Model):
-    subject = db.StringProperty(required = True)
+    title = db.StringProperty(required = True)
     blog = db.TextProperty(required = True)
     created = db.DateTimeProperty(auto_now_add = True)
 
