@@ -37,19 +37,19 @@ class Handler(webapp2.RequestHandler):
 
 class MainHandler(Handler):
     #to retain valid user input 1 of 3
-    #def render_newpost(self, title = "", blog = "", error = "")
-        #self.render("newpost.html", title = title, blog = blog, error = error)
+    def render_newpost(self, title = "", blog = "", error = ""):
+        self.render("newpost.html", title = title, blog = blog, error = error)
 
     def get(self):
-        self.render("newpost.html")
+        #self.render("newpost.html")
         #to retain valid user input 2 of 3
-        #self.render_newpost()
+        self.render_newpost()
 
     def post(self):
-        subject = self.request.get("title")
+        title = self.request.get("title")
         blog = self.request.get("blog")
 
-        if subject and blog:
+        if title and blog:
             c = Blog(title = title, blog = blog)
             c.put()
 
@@ -57,9 +57,9 @@ class MainHandler(Handler):
 
         else:
             error = "Both Title and Blog are required."
-            self.render("newpost.html", error = error)
+            #self.render("newpost.html", error = error)
             #to retain valid user input 3 of 3
-            #self.render_newpost(title, blog, error)
+            self.render_newpost(title, blog, error)
 
 
 class Blog(db.Model):
