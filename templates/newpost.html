@@ -11,7 +11,7 @@
             <label>
                 <div>Title</div>
             </label>
-            <input type = "text" name = "title" value = {{title}}>
+            <input type = "text" name = "title" value = "{{title}}"
             <br>
             <br>
             <label>
@@ -24,6 +24,13 @@
             <br>
             <input type = "submit">
         </form>
+
+        <hr>
+
+        {% for blog in blogs %}
+            <div>{{blog.title}}</div>
+            <pre>{{blog.blog}}</pre>
+        {% endfor %}
 
     </body>
 </html>
