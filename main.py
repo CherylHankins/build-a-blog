@@ -78,8 +78,6 @@ class NewPost(Handler):
             self.render_newpost(title, blog, error)
 
 
-
-
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
     ('/newpost', NewPost)

@@ -4,11 +4,11 @@
 
 {% for blog in blogs %}
 
-    <div>{{blog.title}}</div>
-    <pre>{{blog.blog}}</pre>
+    <div class = "title">{{blog.title}}</div>
+    <pre class = "blog">{{blog.blog}}</pre>
 
 {% endfor %}
 <form action = "/newpost">
-<input type = "submit" value = "New Post">
+<input type = "submit" value = "New Post" class = "button">
 </form>
 {% endblock %}

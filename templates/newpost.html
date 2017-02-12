@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>New Post</h1>
+<h2>New Post</h2>
 <form method = "post">
 
     <label>
@@ -10,14 +10,14 @@
     <input type = "text" name = "title" value = "{{title}}"
     <br>
     <br>
+    <br>
     <label>
         <div>Blog</div>
     <textarea name = "blog">{{blog}}</textarea>
     </label>
     <br>
-    <br>
     <div class = "error">{{error}}</div>
     <br>
-    <input type = "submit">
+    <input type = "submit" class = "button">
 </form>
 {% endblock %}

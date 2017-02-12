@@ -2,15 +2,50 @@
 <html>
     <head>
         <title>My Blog</title>
-        <style type="text/css">
-            .error {
-                color: red;
-            }
-        </style>
     </head>
+
+    <style type = "text/css">
+        h1{
+            text-align: center;
+        }
+        body{
+            font-famiy: sans-serif;
+            width: 800px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+        .error{
+            color: red;
+            font-size: 20px;
+        }
+        .title{
+            color: #560BA2;
+            font-size: 30px;
+        }
+        .blog{
+            font-size: 15px;
+        }
+        .button{
+            background-color: #e0c4f2;
+            border-radius: 18px;
+            width: 50%;
+            height: 40px;
+            font-size: 20px;
+            text-decoration: none;
+            border: none;
+        }
+        label{
+            display: block;
+            font-size: 20px;
+        }
+        textarea{
+            width: 400px;
+            height: 200px;
+        }
+    </style>
     <body>
         <h1>My Blog</h1>
-        
+
 
         {% block content %}
         {% endblock %}
