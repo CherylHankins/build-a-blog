@@ -35,10 +35,11 @@ class Handler(webapp2.RequestHandler):
     def render(self, template, **kw):
         self.write(self.render_str(template, **kw))
 
+
 class MainHandler(Handler):
     def render_newpost(self, title = "", blog = "", error = ""):
-        blogs = db.GqlQuery("SELECT * FROM Blog ORDER BY created desc")
-        self.render("newpost.html", title = title, blog = blog, error = error, blogs = blogs)
+        blogs = db.GqlQuery("SELECT * FROM Blog ORDER BY created desc LIMIT 5")
+        self.render("frontpage.html", title = title, blog = blog, error = error, blogs = blogs)
 
     def get(self):
         self.render_newpost()
@@ -48,6 +49,23 @@ class MainHandler(Handler):
         blog = self.request.get("blog")
 
 
+class Blog(db.Model):
+    title = db.StringProperty(required = True)
+    blog = db.TextProperty(required = True)
+    created = db.DateTimeProperty(auto_now_add = True)
+
+
+class NewPost(Handler):
+    def render_newpost(self, title = "", blog = "", error = ""):
+        blogs = db.GqlQuery("SELECT * FROM Blog ORDER BY created desc LIMIT 5")
+        self.render("newpost.html", title = title, blog = blog, error = error, blogs = blogs)
+
+    def get(self):
+        self.render_newpost()
+
+    def post(self):
+        title = self.request.get("title")
+        blog = self.request.get("blog")
 
         if title and blog:
             c = Blog(title = title, blog = blog)
@@ -59,11 +77,12 @@ class MainHandler(Handler):
             error = "Both Title and Blog are required."
             self.render_newpost(title, blog, error)
 
-class Blog(db.Model):
-    title = db.StringProperty(required = True)
-    blog = db.TextProperty(required = True)
-    created = db.DateTimeProperty(auto_now_add = True)
+
+
 
 app = webapp2.WSGIApplication([
-    ('/', MainHandler)
+    ('/', MainHandler),
+    ('/newpost', NewPost)
+
+
 ], debug=True)

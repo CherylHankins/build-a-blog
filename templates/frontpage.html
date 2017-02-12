@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% for blog in blogs %}
+
+    <div>{{blog.title}}</div>
+    <pre>{{blog.blog}}</pre>
+
+{% endfor %}
+<form action = "/newpost">
+<input type = "submit" value = "New Post">
+</form>
+{% endblock %}
