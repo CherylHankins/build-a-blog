@@ -44,16 +44,10 @@ class MainHandler(Handler):
     def get(self):
         self.render_newpost()
 
-    def post(self):
-        title = self.request.get("title")
-        blog = self.request.get("blog")
-
-
 class Blog(db.Model):
     title = db.StringProperty(required = True)
     blog = db.TextProperty(required = True)
     created = db.DateTimeProperty(auto_now_add = True)
-
 
 class NewPost(Handler):
     def render_newpost(self, title = "", blog = "", error = ""):
@@ -71,16 +65,26 @@ class NewPost(Handler):
             c = Blog(title = title, blog = blog)
             c.put()
 
-            self.redirect("/")
+            self.redirect('/')
 
         else:
             error = "Both Title and Blog are required."
             self.render_newpost(title, blog, error)
 
+class ViewPostHandler(Handler):
+    def get(self, id):
+        title = self.request.get("title")
+        #self.render(Blog.get_by_id)
+        self.render(title = title.key().id())
+        #title_id = int(title.key().id())
+        #self.render(title)
+        #title = self.request.get("title")
+        #title_id = (title.key().id())
+        #self.render("permalink.html")
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
-    ('/newpost', NewPost)
-
+    ('/newpost', NewPost),
+    webapp2.Route('/blog/<id:\d+>', ViewPostHandler)
 
 ], debug=True)
