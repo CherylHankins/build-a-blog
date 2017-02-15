@@ -65,7 +65,7 @@ class NewPost(Handler):
             c = Blog(title = title, blog = blog)
             c.put()
 
-            self.redirect('/')
+            self.render('permalink.html', title = title, blog = blog)
 
         else:
             error = "Both Title and Blog are required."
@@ -73,14 +73,17 @@ class NewPost(Handler):
 
 class ViewPostHandler(Handler):
     def get(self, id):
-        title = self.request.get("title")
-        #self.render(Blog.get_by_id)
-        self.render(title = title.key().id())
-        #title_id = int(title.key().id())
-        #self.render(title)
-        #title = self.request.get("title")
-        #title_id = (title.key().id())
-        #self.render("permalink.html")
+        blogs = db.GqlQuery("SELECT * FROM Blog")
+        blog = Blog.get_post_by_id(int(id))
+
+
+        if blog:
+            title = blog.title
+            blog = blog.blog
+            self.render('permalink.html', title = title, blog = blog)
+        else:
+            self.write.out("A blog with that id does not exist.")
+
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
