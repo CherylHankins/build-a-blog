@@ -65,17 +65,18 @@ class NewPost(Handler):
             c = Blog(title = title, blog = blog)
             c.put()
 
-            self.render('permalink.html', title = title, blog = blog )
-
+            #Blog is displayed on permalink.html and URL contains the db id
+            self.redirect('/blog/%s' %str(c.key().id()))
         else:
             error = "Both Title and Blog are required."
             self.render_newpost(title, blog, error)
 
+
+#To retrieve a single post by entering its id number in the Url
 class ViewPostHandler(Handler):
     def get(self, id):
         blogs = db.GqlQuery("SELECT * FROM Blog")
         blog = Blog.get_by_id(int(id))
-
 
         if blog:
             title = blog.title
@@ -84,6 +85,8 @@ class ViewPostHandler(Handler):
         else:
             self.write("A blog with that id does not exist.")
 
+    def post(self):
+        self.redirect('/blog/%s' %str(c.key().id()))
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
